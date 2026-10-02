@@ -19,6 +19,13 @@
 #     caption: "Optional caption"
 #
 # credit: "photos courtesy of ..."     # optional line at the bottom of the page
+# Articles about the band, shown as a strip across the top of the page.
+press:
+  - outlet: "The Stanford Daily"
+    date: "May 20, 2026"
+    title: "How Hot Pocket Nepo Baby turned frosh friendships into four years of music"
+    url: "https://stanforddaily.com/2026/05/20/hot-pocket-nepo-baby-music-friendship/"
+
 # The order is chosen so the two columns end at about the same height.
 items:
   - type: spotify

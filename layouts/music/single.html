@@ -3,6 +3,12 @@
 <article class="shell">
   <h1>{{ .Title }}</h1>
   {{ with .Content }}<div class="prose">{{ . }}</div>{{ end }}
+  {{- range site.Data.music.press }}
+  <a class="press" href="{{ .url }}">
+    <span class="press__source">{{ .outlet }}{{ with .date }} · {{ . }}{{ end }}</span>
+    <span class="press__title">{{ .title }}</span>
+  </a>
+  {{- end }}
   <div class="media-grid">
     {{- range site.Data.music.items }}
     <figure class="media-item media-item--{{ .type }}">
