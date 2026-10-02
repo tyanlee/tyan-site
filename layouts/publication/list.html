@@ -1,0 +1,197 @@
+{{ define "main" }}
+{{- $pages := (where site.RegularPages "Section" "in" (slice "publication" "talk" "software")).ByDate.Reverse }}
+{{- $entries := slice }}
+{{- $tabsUsed := slice }}
+{{- $years := slice }}
+{{- range $pages }}
+  {{- $k := partial "functions/item_kind.html" . }}
+  {{- $tabsUsed = $tabsUsed | append $k.tab }}
+  {{- $years = $years | append (.Date.Format "2006") }}
+  {{- $entries = $entries | append (dict
+    "id" .Path
+    "title" .Title
+    "slug" (path.Base .Path)
+    "url" .Permalink
+    "year" (.Date.Format "2006")
+    "date" (.Date.Format "20060102")
+    "authors" (.Params.authors | default slice)
+    "publication" (.Params.publication | default "")
+    "abstract" (.Params.abstract | default "" | plainify | htmlUnescape)
+    "tab" $k.tab
+    "areas" (.Params.research_areas | default slice)
+    "inProgress" (in (.Params.publication_types | default slice) "work_in_progress")
+  ) }}
+{{- end }}
+{{- $tabOrder := slice
+  (dict "id" "articles" "label" "tab_articles")
+  (dict "id" "in-progress" "label" "tab_in_progress")
+  (dict "id" "working-papers" "label" "tab_working_papers")
+  (dict "id" "thesis" "label" "tab_thesis")
+  (dict "id" "book" "label" "tab_book")
+  (dict "id" "presentations" "label" "tab_presentations")
+  (dict "id" "software" "label" "tab_software")
+  (dict "id" "data" "label" "tab_data") }}
+<div class="shell">
+  {{ partial "breadcrumbs.html" . }}
+  <h1>{{ .Title }}</h1>
+  {{ with .Content }}<div class="prose">{{ . }}</div>{{ end }}
+
+  <nav class="pub-tabs" data-pagefind-ignore role="tablist" aria-label="{{ .Title }}">
+    <button class="tab-btn active" data-tab="all" role="tab" aria-selected="true">{{ i18n "tab_all" }}</button>
+    {{- range $tabOrder }}{{ if in $tabsUsed .id }}
+    <button class="tab-btn" data-tab="{{ .id }}" role="tab" aria-selected="false">{{ i18n .label }}</button>
+    {{- end }}{{ end }}
+  </nav>
+
+  <div class="pub-layout">
+    <div class="pub-main">
+      <div class="pub-toolbar" data-pagefind-ignore>
+        <label class="sr-only" for="pub-q">{{ i18n "filter_search" }}</label>
+        <input id="pub-q" type="search" placeholder="{{ i18n "filter_search" }}" autocomplete="off">
+        <label class="sr-only" for="pub-area">{{ i18n "filter_area" }}</label>
+        <select id="pub-area">
+          <option value="">{{ i18n "filter_area_all" }}</option>
+          {{- range site.Data.research_areas.areas }}
+          <option value="{{ .slug }}">{{ .title }}</option>
+          {{- end }}
+        </select>
+        <label class="sr-only" for="pub-sort">{{ i18n "sort_label" }}</label>
+        <select id="pub-sort">
+          <option value="newest">{{ i18n "sort_newest" }}</option>
+          <option value="oldest">{{ i18n "sort_oldest" }}</option>
+          <option value="az">{{ i18n "sort_az" }}</option>
+          <option value="za">{{ i18n "sort_za" }}</option>
+        </select>
+      </div>
+      <div class="pub-list" id="pub-list">
+        {{- range $pages }}
+        {{- $k := partial "functions/item_kind.html" . }}
+        <article class="pub-item pub-list-item view-citation" data-id="{{ .Path }}" data-tab="{{ $k.tab }}" data-year="{{ .Date.Format "2006" }}" data-types="{{ .Params.publication_types | default slice | jsonify }}">
+          {{ partial "cite_row.html" . }}
+        </article>
+        {{- end }}
+      </div>
+      <p class="no-results" hidden>{{ i18n "no_results" }}</p>
+      <p class="pub-footer" data-pagefind-ignore>
+        <span class="result-count" aria-live="polite">{{ len $pages }} of {{ len $pages }} results</span>
+        <button id="pub-bibtex" class="link-btn" type="button">{{ i18n "download_citations" }}</button>
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var data = {{ $entries | jsonify | safeJS }};
+  var byId = {};
+  data.forEach(function (d) {
+    d.text = [d.title, d.authors.join(' '), d.publication, d.abstract].join(' ').toLowerCase();
+    byId[d.id] = d;
+  });
+  var list = document.getElementById('pub-list');
+  var items = Array.prototype.slice.call(list.querySelectorAll('.pub-item'));
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab-btn'));
+  var tabIds = tabs.map(function (b) { return b.dataset.tab; });
+  var qEl = document.getElementById('pub-q');
+  var areaEl = document.getElementById('pub-area');
+  var sortEl = document.getElementById('pub-sort');
+  var yearEls = Array.prototype.slice.call(document.querySelectorAll('.year-cb'));
+  var countEl = document.querySelector('.result-count');
+  var emptyEl = document.querySelector('.no-results');
+  var state = { tab: 'all', q: '', area: '', years: [], sort: 'newest' };
+
+  function readHash() {
+    var parts = location.hash.replace(/^#/, '').split('?');
+    var p = new URLSearchParams(parts[1] || '');
+    state.tab = tabIds.indexOf(parts[0]) > -1 ? parts[0] : 'all';
+    state.q = p.get('q') || '';
+    state.area = p.get('area') || '';
+    state.years = (p.get('year') || '').split(',').filter(Boolean);
+    state.sort = p.get('sort') || 'newest';
+  }
+  function writeHash(push) {
+    var p = new URLSearchParams();
+    if (state.q) p.set('q', state.q);
+    if (state.area) p.set('area', state.area);
+    if (state.years.length) p.set('year', state.years.join(','));
+    if (state.sort !== 'newest') p.set('sort', state.sort);
+    var qs = p.toString();
+    var hash = (state.tab === 'all' && !qs) ? '' : '#' + state.tab + (qs ? '?' + qs : '');
+    if (hash === location.hash) return;
+    history[push ? 'pushState' : 'replaceState'](null, '', location.pathname + location.search + hash);
+  }
+  function syncControls() {
+    qEl.value = state.q; areaEl.value = state.area; sortEl.value = state.sort;
+    yearEls.forEach(function (cb) { cb.checked = state.years.indexOf(cb.value) > -1; });
+    tabs.forEach(function (btn) {
+      var on = btn.dataset.tab === state.tab;
+      btn.classList.toggle('active', on);
+      btn.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+  }
+  function visibleEntries() {
+    return items.filter(function (el) { return !el.hidden; }).map(function (el) { return byId[el.dataset.id]; });
+  }
+  function apply() {
+    var q = state.q.trim().toLowerCase(), visible = 0;
+    items.forEach(function (el) {
+      var d = byId[el.dataset.id];
+      var show = (state.tab === 'all' || d.tab === state.tab) &&
+        (!state.area || d.areas.indexOf(state.area) > -1) &&
+        (!state.years.length || state.years.indexOf(d.year) > -1) &&
+        (!q || d.text.indexOf(q) > -1);
+      el.hidden = !show;
+      if (show) visible++;
+    });
+    var cmp = {
+      newest: function (a, b) { return b.date.localeCompare(a.date); },
+      oldest: function (a, b) { return a.date.localeCompare(b.date); },
+      az: function (a, b) { return a.title.localeCompare(b.title); },
+      za: function (a, b) { return b.title.localeCompare(a.title); }
+    }[state.sort] || function () { return 0; };
+    items.slice().sort(function (a, b) { return cmp(byId[a.dataset.id], byId[b.dataset.id]); })
+      .forEach(function (el) { list.appendChild(el); });
+    countEl.textContent = visible + ' of ' + items.length + ' results';
+    emptyEl.hidden = visible !== 0;
+    syncControls();
+  }
+  function update(push) { writeHash(push); apply(); }
+
+  tabs.forEach(function (btn) {
+    btn.addEventListener('click', function () { state.tab = btn.dataset.tab; update(true); });
+  });
+  qEl.addEventListener('input', function () { state.q = qEl.value; update(false); });
+  areaEl.addEventListener('change', function () { state.area = areaEl.value; update(true); });
+  sortEl.addEventListener('change', function () { state.sort = sortEl.value; update(false); });
+  yearEls.forEach(function (cb) {
+    cb.addEventListener('change', function () {
+      state.years = yearEls.filter(function (c) { return c.checked; }).map(function (c) { return c.value; });
+      update(true);
+    });
+  });
+  document.getElementById('pub-bibtex').addEventListener('click', function () {
+    var used = {};
+    var bib = visibleEntries().map(function (d) {
+      var last = (d.authors[0] || 'anon').split(' ').pop().toLowerCase().replace(/[^a-z]/g, '');
+      var word = (d.title.toLowerCase().match(/[a-z]{4,}/) || ['item'])[0];
+      var key = last + d.year + word;
+      while (used[key]) key += 'a';
+      used[key] = true;
+      var fields = ['  title = {' + d.title + '}', '  author = {' + d.authors.join(' and ') + '}', '  year = {' + d.year + '}'];
+      if (d.publication) fields.push('  howpublished = {' + d.publication + '}');
+      if (d.inProgress) fields.push('  note = {In progress}');
+      fields.push('  url = {' + d.url + '}');
+      return '@misc{' + key + ',\n' + fields.join(',\n') + '\n}';
+    }).join('\n\n');
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([bib + '\n'], { type: 'text/plain' }));
+    a.download = 'citations.bib';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+  });
+  window.addEventListener('hashchange', function () { readHash(); apply(); });
+  window.addEventListener('popstate', function () { readHash(); apply(); });
+  readHash(); apply();
+})();
+</script>
+{{ end }}

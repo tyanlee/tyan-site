@@ -1,0 +1,22 @@
+{
+  "areas": [
+    {
+      "slug": "homelessness-policy",
+      "title": "Homelessness Policy",
+      "description": ""
+    },
+    {
+      "slug": "inequality-macroeconomics",
+      "title": "Inequality and Heterogeneity in Macroeconomics",
+      "description": "",
+      "other_work": [
+        {
+          "kind": "Paper",
+          "title": "The Race Between Asset Supply and Asset Demand",
+          "url": "https://www.nber.org/papers/w34470",
+          "description": "With Prof. Adrien Auclert, I wrote Python, Stata, and R code to analyze PSID and DINA data across repositories to ascertain the effect of inequality on asset demand. Published in 2025 as an NBER working paper by Auclert, Malmberg, Rognlie, and Straub, and presented at the Federal Reserve’s Jackson Hole conference."
+        }
+      ]
+    }
+  ]
+}

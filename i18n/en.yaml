@@ -1,0 +1,97 @@
+# All interface labels live here. Rename a button or label site-wide by editing its line.
+- id: nav_search
+  translation: "Search"
+- id: nav_menu
+  translation: "Menu"
+- id: skip_to_content
+  translation: "Skip to content"
+- id: home
+  translation: "Home"
+- id: btn_bio
+  translation: "Bio & C.V."
+- id: btn_email
+  translation: "Email"
+- id: research_areas
+  translation: "Research Areas"
+- id: view_all
+  translation: "View all"
+- id: abstract
+  translation: "Abstract"
+- id: see_also
+  translation: "See Also"
+- id: tab_all
+  translation: "All"
+- id: tab_articles
+  translation: "Articles"
+- id: tab_in_progress
+  translation: "Work in Progress"
+- id: tab_working_papers
+  translation: "Working Papers"
+- id: tab_thesis
+  translation: "Thesis"
+- id: tab_book
+  translation: "Books"
+- id: tab_presentations
+  translation: "Presentations"
+- id: tab_software
+  translation: "Software"
+- id: tab_data
+  translation: "Data"
+- id: filter_search
+  translation: "Search"
+- id: filter_area
+  translation: "Research area"
+- id: filter_area_all
+  translation: "All areas"
+- id: filter_year
+  translation: "Year"
+- id: filter_reset
+  translation: "Reset"
+- id: sort_label
+  translation: "Sort"
+- id: sort_newest
+  translation: "Newest first"
+- id: sort_oldest
+  translation: "Oldest first"
+- id: sort_az
+  translation: "Title A–Z"
+- id: sort_za
+  translation: "Title Z–A"
+- id: download_citations
+  translation: "Download citations (BibTeX)"
+- id: no_results
+  translation: "Nothing matches these filters."
+- id: kind_paper
+  translation: "Paper"
+- id: kind_presentation
+  translation: "Presentation"
+- id: kind_software
+  translation: "Software"
+- id: kind_dataset
+  translation: "Dataset"
+- id: kind_thesis
+  translation: "Thesis"
+- id: kind_book
+  translation: "Book"
+- id: status_in_progress
+  translation: "In progress"
+- id: search_placeholder
+  translation: "Search this site"
+- id: search_close
+  translation: "Close"
+- id: search_empty
+  translation: "No results."
+- id: search_fallback
+  translation: "Search this site with Google"
+- id: not_found_title
+  translation: "Page not found"
+- id: not_found_body
+  translation: "That address doesn't match a page on this site. Start from one of these:"
+- id: link_publisher
+  translation: "Publisher's Version"
+- id: link_article
+  translation: "Article (PDF)"
+- id: link_poster
+  translation: "Poster (PDF)"
+- id: link_slides
+  translation: "Slides (PDF)"

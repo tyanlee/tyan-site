@@ -1,0 +1,42 @@
+{{ define "head" }}<meta name="robots" content="noindex">{{ end }}
+{{ define "main" }}
+<article class="shell">
+  <h1>{{ .Title }}</h1>
+  {{ with .Content }}<div class="prose">{{ . }}</div>{{ end }}
+  <div class="media-grid">
+    {{- range site.Data.music.items }}
+    <figure class="media-item media-item--{{ .type }}">
+      {{- if eq .type "spotify" }}
+      {{- $embed := replaceRE `open\.spotify\.com/(intl-[a-z]+/)?(track|album|artist|playlist)/` "open.spotify.com/embed/$2/" .url }}
+      <iframe src="{{ $embed }}" title="{{ .title | default "Spotify player" }}" height="{{ .height | default 152 }}" loading="lazy" allow="encrypted-media; clipboard-write"></iframe>
+      {{- else if eq .type "youtube" }}
+      {{- $id := replaceRE `^.*(?:v=|youtu\.be/|embed/|shorts/)([A-Za-z0-9_-]{11}).*$` "$1" .url }}
+      <iframe class="media-video" src="https://www.youtube-nocookie.com/embed/{{ $id }}" title="{{ .title | default "Video" }}" loading="lazy" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+      {{- else if eq .type "video" }}
+      <video controls preload="metadata" playsinline{{ with .poster }} poster="{{ . | relURL }}"{{ end }} aria-label="{{ .title | default "Video" }}">
+        <source src="{{ .file | relURL }}" type="video/mp4">
+      </video>
+      {{- else if eq .type "photo" }}
+      <img src="{{ .file | relURL }}" alt="{{ .alt | default .caption | default "Photo" }}" loading="lazy">
+      {{- end }}
+      {{- with .caption }}<figcaption>{{ . }}</figcaption>{{ end }}
+    </figure>
+    {{- end }}
+  </div>
+  {{ with site.Data.music.credit }}<p class="media-credit">{{ . }}</p>{{ end }}
+</article>
+<script>
+(function () {
+  document.querySelectorAll('.media-item--video video').forEach(function (v) {
+    var tile = v.closest('.media-item');
+    v.addEventListener('play', function () {
+      tile.classList.add('is-playing');
+      // Only one clip plays at a time.
+      document.querySelectorAll('.media-item--video video').forEach(function (o) { if (o !== v) o.pause(); });
+    });
+    v.addEventListener('pause', function () { tile.classList.remove('is-playing'); });
+    v.addEventListener('ended', function () { tile.classList.remove('is-playing'); });
+  });
+})();
+</script>
+{{ end }}

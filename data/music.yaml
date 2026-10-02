@@ -1,0 +1,67 @@
+# Everything shown on the Music page, in order. Each entry is one tile.
+#
+#   - type: spotify            # a Spotify player
+#     url: "https://open.spotify.com/track/XXXXXXXX"      # track, album, or artist link
+#     title: "Song title"
+#
+#   - type: youtube            # a YouTube video (unlisted videos work)
+#     url: "https://www.youtube.com/watch?v=XXXXXXXX"
+#     title: "What the video shows"
+#
+#   - type: video              # a short clip stored in static/media/
+#     file: "media/drumming.mp4"
+#     poster: "media/drumming.jpg"     # optional still image shown before play
+#     title: "What the video shows"
+#
+#   - type: photo              # a picture stored in static/media/
+#     file: "media/gig-1.jpg"
+#     alt: "Tyan Lee playing drums at ..."
+#     caption: "Optional caption"
+#
+# credit: "photos courtesy of ..."     # optional line at the bottom of the page
+# The order is chosen so the two columns end at about the same height.
+items:
+  - type: spotify
+    url: "https://open.spotify.com/track/0xeKNvuvUuiLGtEK3WTEcf"
+    title: "Hot Pocket Nepo Baby on Spotify"
+    height: 352
+
+  - type: video
+    file: "media/no-one-knows.mp4"
+    poster: "media/no-one-knows.jpg"
+    title: "Drumming No One Knows by Queens of the Stone Age"
+    caption: "“No One Knows” by Queens of the Stone Age"
+
+  - type: photo
+    file: "media/band-live.jpg"
+    alt: "Hot Pocket Nepo Baby playing live, Tyan Lee on drums between two guitarists"
+
+  - type: video
+    file: "media/even-flow.mp4"
+    poster: "media/even-flow.jpg"
+    title: "Drumming Even Flow by Pearl Jam"
+    caption: "“Even Flow” by Pearl Jam"
+
+  - type: photo
+    file: "media/hot-pockets-kit.jpg"
+    alt: "Tyan Lee behind a drum kit with a box of Hot Pockets propped on the bass drum"
+
+  - type: video
+    file: "media/the-pot.mp4"
+    poster: "media/the-pot.jpg"
+    title: "The band playing The Pot by Tool"
+    caption: "“The Pot” by Tool"
+
+  - type: photo
+    file: "media/festival-stage.jpg"
+    alt: "Tyan Lee playing drums on an outdoor festival stage"
+
+  - type: video
+    file: "media/toxicity.mp4"
+    title: "The band playing Toxicity by System of a Down"
+    caption: "“Toxicity” by System of a Down"
+
+  # Keep this one last.
+  - type: photo
+    file: "media/first-kit.jpg"
+    alt: "Tyan Lee as a child playing a red drum kit"

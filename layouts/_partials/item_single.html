@@ -1,0 +1,49 @@
+{{- /* Detail page shared by publications, talks, and software. */ -}}
+<article class="shell shell--narrow item">
+  {{ partial "breadcrumbs.html" . }}
+  <h1>{{ .Title }}</h1>
+  <p class="item-meta">
+    <span class="item-authors">{{ delimit (.Params.authors | default slice) ", " }}</span>
+    <span class="item-date">{{ .Params.date_label | default (.Date.Format "Jan 2006") }}</span>
+  </p>
+  {{- with .Params.publication }}
+  <p class="item-venue">{{ . }}</p>
+  {{- end }}
+  {{- with .Params.related_paper }}{{ with site.GetPage (printf "/publication/%s" .) }}
+  <p class="banner banner--data">Replication data for: <a href="{{ .RelPermalink }}">{{ .Title }}</a></p>
+  {{- end }}{{ end }}
+  {{- with .Params.links }}
+  <p class="item-links">
+    {{- range . }}
+    {{- $url := .url }}{{ if not (findRE "^(https?:|mailto:)" $url) }}{{ $url = (strings.TrimPrefix "/" $url) | relURL }}{{ end }}
+    <a href="{{ $url }}">{{ .name }}</a>
+    {{- end }}
+  </p>
+  {{- end }}
+  {{- $img := partial "functions/get_featured_image.html" . }}
+  {{- with $img }}
+  <img class="item-figure" src="{{ .RelPermalink }}" width="{{ .Width }}" height="{{ .Height }}" alt="{{ $.Title }}">
+  {{- with $.Params.image_credit }}<p class="item-credit">{{ . }}</p>{{ end }}
+  {{- end }}
+  {{- with .Params.abstract }}
+  <section id="abstract">
+    <h2>{{ i18n "abstract" }}</h2>
+    <div class="prose">{{ . | markdownify }}</div>
+  </section>
+  {{- end }}
+  {{- with .Content }}
+  <div class="prose">{{ . }}</div>
+  {{- end }}
+  {{- $related := slice }}
+  {{- if site.Params.see_also }}{{ $related = partial "related_finder.html" . }}{{ end }}
+  {{- with $related }}
+  <section class="see-also" data-pagefind-ignore aria-labelledby="see-also">
+    <h2 id="see-also">{{ i18n "see_also" }}</h2>
+    <ul>
+      {{- range . }}
+      <li>{{ with .kind }}<span class="kind">[{{ . }}]</span> {{ end }}<a href="{{ .url }}">{{ .title }}</a></li>
+      {{- end }}
+    </ul>
+  </section>
+  {{- end }}
+</article>

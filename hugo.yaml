@@ -1,0 +1,49 @@
+baseURL: "https://tyanlee.github.io/tyan-site/"  # final public address; must end with a slash
+title: "Tyan Lee"
+languageCode: en-us
+enableRobotsTXT: true
+disableKinds: [taxonomy, term]
+
+module:
+  imports:
+    - path: github.com/HugoBlox/hugo-blox-builder/modules/blox-tailwind
+
+outputs:
+  home: [HTML, RSS]
+
+params:
+  description: "Tyan Lee is a Postbaccalaureate Researcher at Stanford's Institute for Research in the Social Sciences, working on homelessness policy, poverty, and inequality."
+  owner:
+    name: "Tyan Lee"
+    title: "Postbaccalaureate Researcher"
+    institution: "Stanford's Institute for Research in the Social Sciences"
+    email: "tyanlee@stanford.edu"
+    photo: "images/tyan-lee.jpg"
+  see_also: false    # set to true to show an automatic "See Also" list on each paper page
+  header:
+    navbar:
+      enable: true
+      show_search: false   # set to true to bring back the search icon and Cmd-K search
+  extensions:
+    css:
+      - css/custom.css
+
+permalinks:
+  publication: /publication/:contentbasename/
+  talk: /talk/:contentbasename/
+  software: /software/:contentbasename/
+
+# Menu URLs have no leading slash so they resolve under the /tyan-site/ base path.
+menu:
+  main:
+    - name: Home
+      url: ""
+      weight: 1
+    - name: Bio & C.V.
+      url: bio/
+      weight: 10
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true   # lets the C.V. page use simple HTML for its date/description rows

@@ -1,0 +1,15 @@
+{{- /* Maps a page to its Research-page tab and its See Also label. */ -}}
+{{- $type := index (.Params.publication_types | default slice) 0 | default "" -}}
+{{- $tab := "articles" -}}{{- $kind := "kind_paper" -}}
+{{- if eq .Section "talk" }}{{ $tab = "presentations" }}{{ $kind = "kind_presentation" }}{{ end -}}
+{{- if eq .Section "software" }}{{ $tab = "software" }}{{ $kind = "kind_software" }}{{ end -}}
+{{- if eq $type "work_in_progress" }}{{ $tab = "in-progress" }}{{ $kind = "kind_paper" }}
+{{- else if eq $type "thesis" }}{{ $tab = "thesis" }}{{ $kind = "kind_thesis" }}
+{{- else if in (slice "report" "working_paper") $type }}{{ $tab = "working-papers" }}{{ $kind = "kind_paper" }}
+{{- else if in (slice "book" "book_chapter" "chapter") $type }}{{ $tab = "book" }}{{ $kind = "kind_book" }}
+{{- else if eq $type "presentation" }}{{ $tab = "presentations" }}{{ $kind = "kind_presentation" }}
+{{- else if eq $type "software" }}{{ $tab = "software" }}{{ $kind = "kind_software" }}
+{{- else if eq $type "data" }}{{ $tab = "data" }}{{ $kind = "kind_dataset" }}
+{{- else if eq $type "journal_article" }}{{ $tab = "articles" }}{{ $kind = "kind_paper" }}
+{{- end -}}
+{{- return (dict "tab" $tab "kind" (i18n $kind)) -}}

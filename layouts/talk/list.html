@@ -1,0 +1,12 @@
+{{ define "main" }}
+<div class="shell shell--narrow">
+  {{ partial "breadcrumbs.html" . }}
+  <h1>{{ .Title }}</h1>
+  {{ with .Content }}<div class="prose">{{ . }}</div>{{ end }}
+  <div class="pub-list">
+    {{- range .Pages.ByDate.Reverse }}
+    <article class="pub-item pub-list-item">{{ partial "cite_row.html" . }}</article>
+    {{- end }}
+  </div>
+</div>
+{{ end }}

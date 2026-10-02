@@ -1,0 +1,8 @@
+<nav class="breadcrumbs" data-pagefind-ignore aria-label="Breadcrumb">
+  <a href="{{ "" | relURL }}">{{ i18n "home" }}</a>
+  {{- $writings := site.GetPage "/publication" }}
+  {{- if and .IsPage (in (slice "publication" "talk" "software") .Section) }}
+  <span aria-hidden="true">/</span> <a href="{{ $writings.RelPermalink }}">{{ $writings.Title }}</a>
+  {{- end }}
+  <span aria-hidden="true">/</span> <span aria-current="page">{{ .Title }}</span>
+</nav>

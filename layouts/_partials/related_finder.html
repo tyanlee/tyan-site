@@ -1,0 +1,74 @@
+{{- /*
+  See Also, computed at build time for every publication / talk / software page.
+  Returns a slice of dicts: {title, url, kind}.
+  1.  Explicit front matter wins: related_papers, related_talks, related_software, related_datasets
+      (lists of folder names), plus singular related_paper / related_dataset.
+  1b. see_also: list of {url, title} (external) or {section, slug} (internal).
+  1c. dataverse_url is surfaced as a [Dataset] row.
+  2.  Pages sharing a research area (front matter research_areas, defined in data/research_areas.json).
+  3.  Scoring backfill: +2 per shared title token, +1 per shared author, +2 per shared tag.
+      Threshold 4, relaxed to 2 when fewer than 3 explicit picks. Capped at 8.
+*/ -}}
+{{- $page := . -}}
+{{- $out := slice -}}
+{{- $seen := slice (replaceRE "[^a-z0-9]+" "" (lower $page.Title)) -}}
+{{- $explicit := slice -}}
+
+{{- $fields := dict "related_papers" "publication" "related_paper" "publication" "related_talks" "talk" "related_software" "software" "related_datasets" "publication" "related_dataset" "publication" -}}
+{{- range $field, $section := $fields -}}
+  {{- with index $page.Params $field -}}
+    {{- $slugs := . -}}
+    {{- if not (reflect.IsSlice $slugs) }}{{ $slugs = slice $slugs }}{{ end -}}
+    {{- range $slugs -}}
+      {{- with site.GetPage (printf "/%s/%s" $section .) }}{{ $explicit = $explicit | append . }}{{ end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- range ($page.Params.see_also | default slice) -}}
+  {{- if .url -}}
+    {{- $out = $out | append (dict "title" .title "url" .url "kind" "") -}}
+  {{- else if and .section .slug -}}
+    {{- with site.GetPage (printf "/%s/%s" .section .slug) }}{{ $explicit = $explicit | append . }}{{ end -}}
+  {{- end -}}
+{{- end -}}
+{{- with $page.Params.dataverse_url -}}
+  {{- $out = $out | append (dict "title" ($page.Params.dataverse_name | default "Replication data") "url" . "kind" (i18n "kind_dataset")) -}}
+{{- end -}}
+{{- range $explicit -}}
+  {{- $norm := replaceRE "[^a-z0-9]+" "" (lower .Title) -}}
+  {{- if not (in $seen $norm) -}}
+    {{- $seen = $seen | append $norm -}}
+    {{- $out = $out | append (dict "title" .Title "url" .RelPermalink "kind" (partial "functions/item_kind.html" .).kind) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $threshold := cond (lt (len $explicit) 3) 2 4 -}}
+{{- $myTokens := partial "functions/title_tokens.html" $page.Title -}}
+{{- $myAuthors := $page.Params.authors | default slice -}}
+{{- $myTags := apply ($page.Params.tags | default slice) "lower" "." -}}
+{{- $myAreas := $page.Params.research_areas | default slice -}}
+{{- $scored := slice -}}
+{{- range where site.RegularPages "Section" "in" (slice "publication" "talk" "software") -}}
+  {{- $norm := replaceRE "[^a-z0-9]+" "" (lower .Title) -}}
+  {{- if and (ne .Path $page.Path) (not (in $seen $norm)) -}}
+    {{- $score := 0 -}}
+    {{- $sibling := gt (len (intersect $myAreas (.Params.research_areas | default slice))) 0 -}}
+    {{- $score = add $score (mul 2 (len (intersect $myTokens (partial "functions/title_tokens.html" .Title)))) -}}
+    {{- range (.Params.authors | default slice) -}}
+      {{- $last := index (last 1 (split . " ")) 0 -}}
+      {{- $hit := in $myAuthors . -}}
+      {{- range $myAuthors }}{{ if eq (index (last 1 (split . " ")) 0) $last }}{{ $hit = true }}{{ end }}{{ end -}}
+      {{- if $hit }}{{ $score = add $score 1 }}{{ end -}}
+    {{- end -}}
+    {{- $score = add $score (mul 2 (len (intersect $myTags (apply (.Params.tags | default slice) "lower" ".")))) -}}
+    {{- if or $sibling (ge $score $threshold) -}}
+      {{- if $sibling }}{{ $score = add $score 1000 }}{{ end -}}
+      {{- $seen = $seen | append $norm -}}
+      {{- $scored = $scored | append (dict "key" (printf "%06d-%s" $score (.Date.Format "20060102")) "title" .Title "url" .RelPermalink "kind" (partial "functions/item_kind.html" .).kind) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- range sort $scored "key" "desc" -}}
+  {{- $out = $out | append (dict "title" .title "url" .url "kind" .kind) -}}
+{{- end -}}
+{{- return (first 8 $out) -}}

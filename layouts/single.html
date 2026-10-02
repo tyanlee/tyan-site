@@ -1,0 +1,9 @@
+{{ define "main" }}
+<article class="shell shell--narrow">
+  <h1>{{ .Title }}</h1>
+  {{- if eq .Section "bio" }}
+  <p class="page-lede">{{ site.Params.owner.title }}, {{ site.Params.owner.institution }}</p>
+  {{- end }}
+  <div class="prose">{{ .Content }}</div>
+</article>
+{{ end }}

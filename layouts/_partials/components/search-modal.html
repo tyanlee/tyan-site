@@ -1,0 +1,63 @@
+<dialog id="search-modal" class="search-modal" aria-label="{{ i18n "nav_search" }}" data-pagefind-ignore>
+  <form method="dialog" class="search-modal__bar">
+    <input id="search-input" type="search" autocomplete="off" placeholder="{{ i18n "search_placeholder" }}" aria-label="{{ i18n "search_placeholder" }}">
+    <button class="search-modal__close" value="close">{{ i18n "search_close" }}</button>
+  </form>
+  <div id="search-results" class="search-modal__results" aria-live="polite"></div>
+</dialog>
+<script>
+(function () {
+  var modal = document.getElementById('search-modal');
+  if (!modal || !modal.showModal) return;
+  var input = document.getElementById('search-input');
+  var out = document.getElementById('search-results');
+  var pagefind = null, failed = false, timer = null, seq = 0;
+  var googleURL = 'https://www.google.com/search?q=' + encodeURIComponent('site:{{ strings.TrimSuffix "/" (replaceRE "^https?://" "" site.BaseURL) }} ');
+
+  function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+  function fallback() {
+    out.innerHTML = '<p class="search-modal__note"><a href="' + googleURL + encodeURIComponent(input.value) + '">{{ i18n "search_fallback" }}</a></p>';
+  }
+  function load() {
+    // Pagefind is fetched only when search is first opened.
+    if (pagefind || failed) return Promise.resolve();
+    return import('{{ "pagefind/pagefind.js" | relURL }}').then(function (m) { pagefind = m; if (m.init) m.init(); })
+      .catch(function () { failed = true; });
+  }
+  function open() {
+    if (modal.open) return;
+    modal.showModal(); input.focus(); input.select();
+    load().then(function () { if (failed) fallback(); });
+  }
+  function run() {
+    var q = input.value.trim(), mine = ++seq;
+    if (failed) return fallback();
+    if (!q || !pagefind) { out.innerHTML = ''; return; }
+    pagefind.search(q).then(function (res) {
+      return Promise.all(res.results.slice(0, 8).map(function (r) { return r.data(); }));
+    }).then(function (rows) {
+      if (mine !== seq) return;
+      if (!rows.length) { out.innerHTML = '<p class="search-modal__note">{{ i18n "search_empty" }}</p>'; return; }
+      out.innerHTML = rows.map(function (r) {
+        return '<a class="search-hit" href="' + r.url + '"><span class="search-hit__title">' + esc(r.meta.title || r.url) +
+          '</span><span class="search-hit__excerpt">' + r.excerpt + '</span></a>';
+      }).join('');
+    }).catch(function () { failed = true; fallback(); });
+  }
+  document.querySelectorAll('[data-search-open]').forEach(function (b) { b.addEventListener('click', open); });
+  document.addEventListener('keydown', function (e) {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); open(); }
+  });
+  input.addEventListener('input', function () { clearTimeout(timer); timer = setTimeout(run, 150); });
+  modal.addEventListener('click', function (e) { if (e.target === modal) modal.close(); });
+  modal.addEventListener('keydown', function (e) {
+    if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+    var hits = Array.prototype.slice.call(out.querySelectorAll('a'));
+    if (!hits.length) return;
+    e.preventDefault();
+    var i = hits.indexOf(document.activeElement);
+    if (e.key === 'ArrowDown') (hits[i + 1] || hits[0]).focus();
+    else if (i <= 0) input.focus(); else hits[i - 1].focus();
+  });
+})();
+</script>

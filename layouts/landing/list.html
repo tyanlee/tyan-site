@@ -1,0 +1,60 @@
+{{ define "main" }}
+{{- $o := site.Params.owner }}
+<section class="shell hero">
+  <div class="hero__text">
+    <div class="hero__head">
+      <div class="hero__id">
+        <h1>{{ $o.name }}</h1>
+        <p class="hero__role">{{ $o.title }}<br>{{ $o.institution }}</p>
+        <p class="hero__email"><a href="mailto:{{ $o.email }}">{{ $o.email }}</a></p>
+      </div>
+      {{- if fileExists (printf "static/%s" $o.photo) }}
+      <div class="hero__photo">
+        <img src="{{ $o.photo | relURL }}" width="1100" height="733" alt="Portrait of {{ $o.name }}, {{ $o.institution }}">
+      </div>
+      {{- end }}
+    </div>
+    <div class="prose hero__intro">{{ .Content }}</div>
+  </div>
+</section>
+
+{{- $items := where site.RegularPages "Section" "in" (slice "publication" "talk" "software") }}
+{{- $featured := site.Data.featured_publications.featured | default slice }}
+{{- $writings := site.GetPage "/publication" }}
+<section class="shell areas" id="research-areas" aria-labelledby="research-areas-heading">
+  <h2 id="research-areas-heading">{{ i18n "research_areas" }}</h2>
+  {{- range site.Data.research_areas.areas }}
+  {{- $slug := .slug }}
+  {{- $first := slice }}{{ $rest := slice }}
+  {{- range $items.ByDate.Reverse }}
+    {{- if in (.Params.research_areas | default slice) $slug }}
+      {{- if in $featured (path.Base .Path) }}{{ $first = $first | append . }}{{ else }}{{ $rest = $rest | append . }}{{ end }}
+    {{- end }}
+  {{- end }}
+  {{- $mine := $first | append $rest }}
+  <div class="area">
+    <h3>{{ .title }}</h3>
+    <div class="area__body">
+      {{ with .description }}<p>{{ . | markdownify }}</p>{{ end }}
+      <ul class="area__items">
+        {{- range first 5 $mine }}
+        <li>
+          <a href="{{ .Params.home_url | default .RelPermalink }}">{{ .Title }}</a>
+          {{- with .Params.home_blurb }}<p>{{ . | markdownify }}</p>{{ end }}
+        </li>
+        {{- end }}
+        {{- range .other_work }}
+        <li>
+          <a href="{{ .url }}">{{ .title }}</a>
+          {{- with .description }}<p>{{ . | markdownify }}</p>{{ end }}
+        </li>
+        {{- end }}
+      </ul>
+      {{- if gt (len $mine) 5 }}
+      <p class="area__more"><a href="{{ $writings.RelPermalink }}#all?area={{ $slug }}">{{ i18n "view_all" }} →</a></p>
+      {{- end }}
+    </div>
+  </div>
+  {{- end }}
+</section>
+{{ end }}

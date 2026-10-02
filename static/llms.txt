@@ -1,0 +1,14 @@
+# Tyan Lee
+
+> Tyan Lee is a Postbaccalaureate Researcher at Stanford's Institute for Research in the Social Sciences (IRiSS). Tyan holds a B.A. with Honors in Economics from Stanford University (2026) and studies the effects of policy on socioeconomically disadvantaged populations in the United States, with current work on homelessness policy.
+
+## Key pages
+
+- [Home](https://tyanlee.github.io/tyan-site/): introduction, research areas, and email address
+- [Bio & C.V.](https://tyanlee.github.io/tyan-site/bio/): biography, education, and research experience
+- [Research](https://tyanlee.github.io/tyan-site/publication/): work in progress, honors thesis, and presentations
+
+## Research areas
+
+- Homelessness policy
+- Inequality and heterogeneity in macroeconomics

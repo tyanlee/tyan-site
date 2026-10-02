@@ -1,0 +1,25 @@
+{{- /* Google Scholar tags and schema.org JSON-LD, built from the page's own front matter. */ -}}
+<meta name="citation_title" content="{{ .Title }}">
+{{- range .Params.authors }}
+<meta name="citation_author" content="{{ . }}">
+{{- end }}
+<meta name="citation_publication_date" content="{{ .Date.Format "2006/01/02" }}">
+{{- $doi := "" }}
+{{- range .Params.links }}
+  {{- if strings.HasSuffix (lower .url) ".pdf" }}
+<meta name="citation_pdf_url" content="{{ .url | absURL }}">
+  {{- end }}
+  {{- if strings.Contains .url "doi.org/" }}{{ $doi = .url }}{{ end }}
+{{- end }}
+{{- with $doi }}
+<meta name="citation_doi" content="{{ replaceRE "^https?://(dx\\.)?doi\\.org/" "" . }}">
+{{- end }}
+{{- $types := .Params.publication_types | default slice }}
+{{- $ldType := "ScholarlyArticle" }}
+{{- if in $types "book" }}{{ $ldType = "Book" }}{{ else if or (eq .Section "talk") (in $types "presentation") }}{{ $ldType = "CreativeWork" }}{{ end }}
+{{- $authors := slice }}
+{{- range .Params.authors }}{{ $authors = $authors | append (dict "@type" "Person" "name" .) }}{{ end }}
+{{- $ld := dict "@context" "https://schema.org" "@type" $ldType "headline" .Title "author" $authors "datePublished" (.Date.Format "2006-01-02") "url" .Permalink }}
+{{- with .Params.abstract }}{{ $ld = merge $ld (dict "abstract" (. | plainify | htmlUnescape)) }}{{ end }}
+{{- with $doi }}{{ $ld = merge $ld (dict "identifier" . "sameAs" .) }}{{ end }}
+<script type="application/ld+json">{{ $ld | jsonify | safeJS }}</script>

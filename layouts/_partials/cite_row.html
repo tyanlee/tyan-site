@@ -1,0 +1,6 @@
+{{- /* One dense citation line: authors, year, linked title, venue. */ -}}
+<span class="cite-authors">{{ delimit (.Params.authors | default slice) ", " }}.</span>
+<span class="cite-year">{{ .Date.Format "2006" }}.</span>
+<a class="cite-title" href="{{ .RelPermalink }}">{{ .Title }}</a>.
+{{- with .Params.publication }} <span class="cite-venue">{{ . }}.</span>{{ end }}
+{{- if in (.Params.publication_types | default slice) "work_in_progress" }} {{ .Params.status_label | default (i18n "status_in_progress") }}.{{ end }}

@@ -1,0 +1,14 @@
+{{ define "main" }}
+<div class="shell shell--narrow">
+  <h1>{{ i18n "not_found_title" }}</h1>
+  <p>{{ i18n "not_found_body" }}</p>
+  <ul class="plain-list">
+    {{- range site.Menus.main }}
+    {{- $url := .URL }}
+    {{- if hasPrefix $url "#" }}{{ $url = printf "%s%s" ("" | relURL) $url }}{{ else }}{{ $url = (strings.TrimPrefix "/" $url) | relURL }}{{ end }}
+    <li><a href="{{ $url }}">{{ .Name }}</a></li>
+    {{- end }}
+  </ul>
+  {{ if site.Params.header.navbar.show_search }}<p><button class="btn btn--primary" type="button" data-search-open>{{ i18n "nav_search" }}</button></p>{{ end }}
+</div>
+{{ end }}

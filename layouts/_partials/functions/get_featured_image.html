@@ -1,0 +1,4 @@
+{{- /* Auto-discovers featured.jpg / featured.png next to a page's index.md. */ -}}
+{{- $img := false -}}
+{{- with .Resources.GetMatch "featured.*" }}{{ if eq .ResourceType "image" }}{{ $img = . }}{{ end }}{{ end -}}
+{{- return $img -}}

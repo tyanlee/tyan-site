@@ -1,0 +1,3 @@
+# Slugs (folder names) to list first under each research area on the homepage.
+# Leave empty to show the newest items.
+featured: []
