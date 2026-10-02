@@ -1,4 +1,4 @@
-baseURL: "https://tyanlee.github.io/tyan-site/"  # final public address; must end with a slash
+baseURL: "https://tyanlee.com/"  # final public address; must end with a slash
 title: "Tyan Lee"
 languageCode: en-us
 enableRobotsTXT: true
@@ -33,7 +33,7 @@ permalinks:
   talk: /talk/:contentbasename/
   software: /software/:contentbasename/
 
-# Menu URLs have no leading slash so they resolve under the /tyan-site/ base path.
+# Menu URLs have no leading slash so they keep working if the site moves under a sub-path.
 menu:
   main:
     - name: Home

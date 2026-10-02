@@ -4,9 +4,9 @@
 
 ## Key pages
 
-- [Home](https://tyanlee.github.io/tyan-site/): introduction, research areas, and email address
-- [Bio & C.V.](https://tyanlee.github.io/tyan-site/bio/): biography, education, and research experience
-- [Research](https://tyanlee.github.io/tyan-site/publication/): work in progress, honors thesis, and presentations
+- [Home](https://tyanlee.com/): introduction, research areas, and email address
+- [Bio & C.V.](https://tyanlee.com/bio/): biography, education, and research experience
+- [Research](https://tyanlee.com/publication/): work in progress, honors thesis, and presentations
 
 ## Research areas
 

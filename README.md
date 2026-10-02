@@ -1,6 +1,6 @@
 # tyan-site
 
-Source for my personal website, <https://tyanlee.github.io/tyan-site/>. Built with [Hugo](https://gohugo.io/) and deployed to GitHub Pages by the workflow in `.github/workflows/deploy.yml` on every push to `main`.
+Source for my personal website, <https://tyanlee.com/>. Built with [Hugo](https://gohugo.io/) and deployed to GitHub Pages by the workflow in `.github/workflows/deploy.yml` on every push to `main`.
 
 ## Layout of the repository
 
@@ -52,7 +52,7 @@ home_blurb: "One or two sentences shown under the title on the homepage."
 
 ## Conventions
 
-- The site is served under `/tyan-site/`, so URLs in front matter, data files, and the menu have no leading slash, and templates use `relURL`.
+- URLs in front matter, data files, and the menu have no leading slash, and templates use `relURL`.
 - Photos and clips are re-encoded before being added so they carry no location or device metadata.
 - The Music page is not in the menu, is marked `noindex`, and is kept out of the sitemap with `private: true`.
 - The automatic "See Also" list on item pages is switched off with `see_also: false` in `hugo.yaml`.
