@@ -8,7 +8,7 @@
 - id: home
   translation: "Home"
 - id: btn_bio
-  translation: "Bio & C.V."
+  translation: "C.V."
 - id: btn_email
   translation: "Email"
 - id: research_areas

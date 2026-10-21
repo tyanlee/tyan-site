@@ -1,17 +1,7 @@
 ---
-title: "Bio & C.V."
-description: "Biography, education, and research experience of Tyan Lee, Postbaccalaureate Researcher at Stanford's Institute for Research in the Social Sciences."
+title: "C.V."
+description: "Education and research experience of Tyan Lee, Postbaccalaureate Researcher at Stanford's Institute for Research in the Social Sciences."
 ---
-
-During my undergraduate career, I worked as a research assistant in various fields of economics, including homelessness policy (with Prof. David Grusky and Dr. Derek Christopher), education (Prof. Ran Abramitzky), and macroeconomics (with Prof. Adrien Auclert).
-
-My main research interests center around the effects of policy on socioeconomically disadvantaged populations in the United States. Most of my current work is on homelessness: which interventions work, for whom, and under what local conditions.
-
-At the Stanford Center on Poverty and Inequality, I evaluated more than 40 quasi-experimental studies and randomized controlled trials of homelessness interventions. That review underpins the tool I am now building at IRiSS, which recommends suites of policies suited to each Continuum of Care's local context, priorities, and budget. Along the way I built a crosswalk from Continuums of Care to census places, so that census and homelessness data can be used together, and presented it at a convening on unsheltered homelessness in Los Angeles in March 2026. I am also developing a quasi-experimental study on how psychiatric holds affect later outcomes for people experiencing homelessness.
-
-As an Undergraduate Research Fellow at the Stanford Institute for Economic Policy Research, I helped compile and analyze a dataset on U.S. college admissions and student life outcomes for Prof. Abramitzky's research on higher education and social mobility, and wrote code analyzing PSID and DINA data for Prof. Auclert's research on inequality and asset demand. My honors thesis, advised by Prof. Auclert, uses Italian household survey data to estimate marginal propensities to consume and studies what they imply for the dynamics of debt-financed fiscal stimulus.
-
-Before that, I spent a summer as a research assistant in Stanford's Department of Political Science, working on the socioeconomic impacts of climate change in sub-Saharan Africa.
 
 ## Education
 

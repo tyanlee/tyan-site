@@ -8,7 +8,7 @@ Source for my personal website, <https://tyanlee.com/>. Built with [Hugo](https:
 |---|---|
 | `hugo.yaml` | Site settings: title, menu, my name, role, and email |
 | `content/_index.md` | Homepage intro |
-| `content/bio/index.md` | Bio & C.V. page |
+| `content/bio/index.md` | C.V. page |
 | `content/publication/`, `content/talk/` | One folder per paper, project, or presentation |
 | `content/music/index.md`, `data/music.yaml` | Music page and the list of its tiles |
 | `data/research_areas.json` | Research areas shown on the homepage |

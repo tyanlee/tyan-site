@@ -39,7 +39,7 @@ menu:
     - name: Home
       url: ""
       weight: 1
-    - name: Bio & C.V.
+    - name: C.V.
       url: bio/
       weight: 10
 
